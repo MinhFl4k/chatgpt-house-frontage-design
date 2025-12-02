@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center my-4" style="color: red">TƯ VẤN THIẾT KẾ MẶT TIỀN NGÔI NHÀ</h1>
+
+    <input type="text" id="userPrompt" placeholder="Nhập yêu cầu mặt tiền...">
+    <button id="sendBtn">Gửi</button>
+
+    <div id="spinner" style="display:none; text-align:center; margin-top:20px;">
+        <div class="spinner-circle" style="border:6px solid #f3f3f3; border-top:6px solid #3498db; border-radius:50%; width:50px; height:50px; animation:spin 1s linear infinite; margin:auto;"></div>
+        <p>Đang xử lý...</p>
+    </div>
+
+    <div id="result" class="mt-4"></div>
+
+    <div id="imageBox" class="text-center mt-4" style="display:none;">
+        <h4>Gợi ý hình ảnh minh hoạ</h4>
+        <p id="imageStatus">Đang tạo hình ảnh...</p>
+        <img id="imageResult" style="max-width:450px; display:none; border-radius:10px;" />
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#sendBtn").click(function() {
+            const prompt = $("#userPrompt").val().trim();
+            if(!prompt) return alert("Vui lòng nhập yêu cầu!");
+
+            $("#spinner").show();
+            $("#result").html("");
+            $("#imageBox").show();
+            $("#imageStatus").text("Đang tạo hình ảnh...");
+            $("#imageResult").hide();
+
+            $.ajax({
+                url: "/api/chat/text",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ prompt: prompt }),
+                success: function(response) {
+                    $("#spinner").hide();
+
+                    const json = typeof response === "string" ? JSON.parse(response) : response;
+
+                    let html = `
+                        <h4>Phong cách: ${json.style}</h4>
+                        <p>Bố cục: ${json.mass}</p>
+                        <p>Mái: ${json.roof}</p>
+                        <p>Cửa/ban công: ${json.windows_doors}</p>
+                        <p>Màu sắc: ${json.colors}</p>
+                        <p>Vật liệu: ${json.materials}</p>
+                        <p>Ánh sáng: ${json.lighting}</p>
+                        <p>Tiểu cảnh: ${json.landscape}</p>
+                        <p>Cổng/rào: ${json.gate_fence}</p>
+                        <p>Điểm nhấn: ${json.highlights}</p>
+                    `;
+
+                    $("#result").html(html);
+                },
+                error: function(err) {
+                    $("#spinner").hide();
+                    console.error(err);
+                    alert("Đã có lỗi xảy ra!");
+                }
+            });
+
+            $.ajax({
+                url: "/api/chat/image",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ prompt: prompt }),
+                success: function(response) {
+                    $("#imageStatus").hide();
+
+<!--                    const imageUrl = response.url || response;-->
+
+                    const base64 = response.b64_json || response;
+
+                    const imgSrc = "data:image/png;base64," + base64;
+
+                    $("#imageResult")
+                        .attr("src", imgSrc)
+                        .show();
+                },
+                error: function() {
+                    $("#imageStatus").text("Lỗi khi tạo ảnh từ ChatGPT!");
+                }
+            });
+        });
+    </script>
+
+    <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+    </style>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</body>
+</html>
