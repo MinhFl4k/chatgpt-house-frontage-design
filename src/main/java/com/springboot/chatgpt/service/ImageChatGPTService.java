@@ -19,7 +19,6 @@ public class ImageChatGPTService {
     @Value("${openapi.api.image.model}")
     private String modelId;
 
-    private static final String OPENAI_IMAGE_URL = "https://api.openai.com/v1/images/generations";
 
     public ImageChatGPTService(@Qualifier("imageRestClient") RestClient restClient) {
         this.restClient = restClient;
@@ -35,7 +34,6 @@ public class ImageChatGPTService {
         );
 
         ImageGenerationResponse response = restClient.post()
-                .uri(OPENAI_IMAGE_URL)
                 .header("Authorization", "Bearer " + apiKey)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(request)

@@ -21,7 +21,7 @@
     <div id="result" class="mt-4"></div>
 
     <div id="imageBox" class="text-center mt-4" style="display:none;">
-        <h4>Gợi ý hình ảnh minh hoạ</h4>
+        <h4>Mẫu ảnh mặt tiền tham khảo</h4>
         <p id="imageStatus">Đang tạo hình ảnh...</p>
         <img id="imageResult" style="max-width:450px; display:none; border-radius:10px;" />
     </div>
@@ -50,15 +50,15 @@
 
                     let html = `
                         <h4>Phong cách: ${json.style}</h4>
-                        <p>Bố cục: ${json.mass}</p>
-                        <p>Mái: ${json.roof}</p>
-                        <p>Cửa/ban công: ${json.windows_doors}</p>
-                        <p>Màu sắc: ${json.colors}</p>
-                        <p>Vật liệu: ${json.materials}</p>
-                        <p>Ánh sáng: ${json.lighting}</p>
-                        <p>Tiểu cảnh: ${json.landscape}</p>
-                        <p>Cổng/rào: ${json.gate_fence}</p>
-                        <p>Điểm nhấn: ${json.highlights}</p>
+                        <p><strong>Bố cục</strong>: ${json.mass}</p>
+                        <p><strong>Mái</strong>: ${json.roof}</p>
+                        <p><strong>Cửa/ban công</strong>: ${json.windows_doors}</p>
+                        <p><strong>Màu sắc</strong>: ${json.colors}</p>
+                        <p><strong>Vật liệu</strong>: ${json.materials}</p>
+                        <p><strong>Ánh sáng</strong>: ${json.lighting}</p>
+                        <p><strong>Tiểu cảnh</strong>: ${json.landscape}</p>
+                        <p><strong>Cổng/rào</strong>: ${json.gate_fence}</p>
+                        <p><strong>Điểm nhấn</strong>: ${json.highlights}</p>
                     `;
 
                     $("#result").html(html);
